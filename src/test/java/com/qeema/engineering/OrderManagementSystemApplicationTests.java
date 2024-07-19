@@ -1,4 +1,4 @@
-package com.qeema.engineering.ordermanagementsystem;
+package com.qeema.engineering;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
