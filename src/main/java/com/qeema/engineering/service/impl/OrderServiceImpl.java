@@ -29,7 +29,6 @@ public class OrderServiceImpl implements OrderService {
     OrderMapper orderMapper;
 
 
-
     public OrderServiceImpl(OrderRepository orderRepository, ProductService productService, OrderMapper orderMapper) {
         this.orderRepository = orderRepository;
         this.productService = productService;
@@ -38,6 +37,7 @@ public class OrderServiceImpl implements OrderService {
 
     @Async
     @Override
+    @Transactional
     public CompletableFuture<Void> addOrder(OrderDTO orderDTO) {
         List<Product> productsToUpdate = new ArrayList<>();
         logger.info("creating new order");
@@ -70,15 +70,21 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public List<OrderDTO> getOrders() {
-        logger.error("get all orders");
-        return orderRepository.findAll().stream().map(orderMapper::mapFromOrderEntityToOrderDTO).collect(Collectors.toList());
+        logger.info("get all orders");
+        return orderRepository.findAll()
+                .stream()
+                .map(orderMapper::mapFromOrderEntityToOrderDTO).collect(Collectors.toList());
     }
 
 
-    @Transactional
     protected void handelCreatTheOrder(Order order) {
         logger.info("save the new order");
-        orderRepository.save(order);
+        try {
+            orderRepository.save(order);
+        } catch (Exception ex) {
+            logger.error(ex.getMessage());
+        }
+
     }
 
     private void updateTheProducts(List<Product> products) {
