@@ -3,16 +3,18 @@ package com.qeema.engineering.model;
 import jakarta.persistence.*;
 
 
+import java.util.ArrayList;
 import java.util.List;
 
-@Entity(name = "order")
-public class Order extends BaseEntity {
+@Entity(name = "order_table")
+public class Order extends BaseEntity  {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(cascade = CascadeType.PERSIST)
+    @JoinColumn(name = "order_id")
     private List<Product> products;
 
     public long getId() {
