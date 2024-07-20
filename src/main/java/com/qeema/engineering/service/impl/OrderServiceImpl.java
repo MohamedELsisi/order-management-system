@@ -73,11 +73,7 @@ public class OrderServiceImpl implements OrderService {
 
                 order.getOrderProducts().add(orderProduct);
             });
-
-
-            handelCreatTheOrder(order);
-            updateTheProducts(productsToUpdate);
-
+            handelCreatTheOrder(order, productsToUpdate);
         });
     }
 
@@ -100,19 +96,17 @@ public class OrderServiceImpl implements OrderService {
     }
 
 
-    protected void handelCreatTheOrder(Order order) {
-        logger.info("save the new order");
+    protected void handelCreatTheOrder(Order order,List<Product> products) {
         try {
+            logger.info("save the new order");
             orderRepository.save(order);
+
+            logger.info("update the products");
+            productService.updateProducts(products);
         } catch (Exception ex) {
             logger.error(ex.getMessage());
         }
 
-    }
-
-    private void updateTheProducts(List<Product> products) {
-        logger.info("update the products");
-        productService.updateProducts(products);
     }
 
 }
