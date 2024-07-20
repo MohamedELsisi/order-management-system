@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface ProductService {
-    Optional<Product> getProductByID(ProductDTO productDTO);
+    Optional<Product> getProductByID(Long id);
 
     void updateProducts(List<Product> products);
 }

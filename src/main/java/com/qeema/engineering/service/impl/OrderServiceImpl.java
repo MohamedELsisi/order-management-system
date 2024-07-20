@@ -11,9 +11,12 @@ import com.qeema.engineering.service.OrderService;
 import com.qeema.engineering.service.ProductService;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
+import java.util.concurrent.CompletableFuture;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -30,57 +33,39 @@ public class OrderServiceImpl implements OrderService {
         this.orderMapper = orderMapper;
     }
 
+    @Async
     @Override
-    public void addOrder(OrderDTO orderDTO) {
-        List<Product> productsTOUpdate = new ArrayList<>();
+    public CompletableFuture<Void> addOrder(OrderDTO orderDTO) {
+        List<Product> productsToUpdate = new ArrayList<>();
 
-        validateProducts(orderDTO);
-        for (ProductDTO product : orderDTO.getProductList()) {
-            Optional<Product> existProduct = productService.getProductByID(product);
-            if (existProduct.isPresent()) {
-                if (product.getQuantity() <= existProduct.get().getQuantity()) {
-                    existProduct.get().setQuantity(existProduct.get().getQuantity() - product.getQuantity());
-                    productsTOUpdate.add(existProduct.get());
-                } else
-                    throw new IllegalArgumentException("Product quantity less than or equal to product quantity");
-            } else
-                throw new IllegalArgumentException("Product Not Found");
-        }
-        Order order = orderMapper.mapFromOrderDtoToOrderEntity(orderDTO);
-        handelCreatTheOrder(order);
-        updateTheProducts(productsTOUpdate);
+        return CompletableFuture.runAsync(() -> {
+            
+            orderDTO.getProductList().forEach(productDTO -> {
+                Product existingProduct = productService.getProductByID(productDTO.getId())
+                        .orElseThrow(() -> new IllegalArgumentException("Product Not Found"));
+
+                if (productDTO.getQuantity() >= existingProduct.getQuantity()) {
+                    throw new IllegalArgumentException("Product quantity is less than the requested quantity.");
+                }
+
+                existingProduct.setQuantity(existingProduct.getQuantity() - productDTO.getQuantity());
+                productsToUpdate.add(existingProduct);
+            });
+
+            Order order = orderMapper.mapFromOrderDtoToOrderEntity(orderDTO);
+            handelCreatTheOrder(order);
+            updateTheProducts(productsToUpdate);
+
+        });
     }
 
     @Override
     public List<OrderDTO> getOrders() {
-        List<Order> orders = orderRepository.findAll();
-        List<OrderDTO> orderDTOs = new ArrayList<>();
-        if (!orders.isEmpty()) {
-            for (Order order : orders) {
-                orderDTOs.add(orderMapper.mapFromOrderEntityToOrderDTO(order));
-            }
-        }
-        return orderDTOs;
+        return orderRepository.findAll().stream()
+                .map(orderMapper::mapFromOrderEntityToOrderDTO)
+                .collect(Collectors.toList());
     }
 
-
-    private void validateProducts(OrderDTO order) {
-        Set<Long> productIds = new HashSet<>();
-        for (ProductDTO product : order.getProductList()) {
-            if (product.getId() == null) {
-                throw new IllegalArgumentException("missing product ID");
-            }
-            if (product.getPrice() <= 0) {
-                throw new IllegalArgumentException("Product price must be greater than 0.");
-            }
-            if (product.getQuantity() <= 0) {
-                throw new IllegalArgumentException("Product quantity must be greater than 0");
-            }
-            if (!productIds.add(product.getId())) {
-                throw new IllegalArgumentException("Each product must exist only one time in the order.");
-            }
-        }
-    }
 
     @Transactional
     protected void handelCreatTheOrder(Order order) {

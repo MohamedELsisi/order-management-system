@@ -28,7 +28,7 @@ public class DataInitializer {
             productB.setPrice(1550);
             productB.setQuantity(150);
             productRepo.save(productB);
-            
+
         };
     }
 }
