@@ -1,9 +1,26 @@
 package com.qeema.engineering.dto;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+
 public class ProductDTO {
-   private  String name;
+    @JsonProperty("id")
+    private Long id;
+    @JsonProperty("name")
+    private String name;
+    @JsonProperty("price")
     private long price;
+    @JsonProperty("quantity")
     private int quantity;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
 
     public String getName() {
         return name;
