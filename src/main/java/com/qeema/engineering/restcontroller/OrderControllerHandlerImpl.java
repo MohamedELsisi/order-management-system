@@ -39,16 +39,16 @@ public class OrderControllerHandlerImpl implements OrderControllerHandler {
         Set<Long> productIds = new HashSet<>();
         for (ProductDTO product : order.getProductList()) {
             if (product.getId() == null) {
-                throw new IllegalArgumentException("missing product ID");
+                throw new ValidationException("missing product ID");
             }
             if (product.getPrice() <= 0) {
-                throw new IllegalArgumentException("Product price must be greater than 0.");
+                throw new ValidationException("Product price must be greater than 0.");
             }
             if (product.getQuantity() <= 0) {
-                throw new IllegalArgumentException("Product quantity must be greater than 0");
+                throw new ValidationException("Product quantity must be greater than 0");
             }
             if (!productIds.add(product.getId())) {
-                throw new IllegalArgumentException("Each product must exist only one time in the order.");
+                throw new ValidationException("Each product must exist only one time in the order.");
             }
         }
     }

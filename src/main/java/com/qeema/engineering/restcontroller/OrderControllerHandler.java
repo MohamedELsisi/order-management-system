@@ -7,6 +7,5 @@ import java.util.List;
 
 public interface OrderControllerHandler {
     ResponseEntity<Void> handleCreateOrder(OrderDTO orderDTO);
-
     ResponseEntity<List<OrderDTO>> getAllOrders();
 }

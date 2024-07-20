@@ -13,18 +13,6 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 @ControllerAdvice
 public class GeneralExceptionHandler extends ResponseEntityExceptionHandler {
 
-    @ExceptionHandler(BadRequestException.class)
-    public ResponseEntity<Object> handleBadRequestException(BadRequestException ex, WebRequest request) {
-        ErrorDetails errorDetails = getErrorDetails(ex, HttpStatus.BAD_REQUEST);
-        return new ResponseEntity<>(errorDetails, HttpStatus.BAD_REQUEST);
-    }
-
-    @ExceptionHandler(IllegalArgumentException.class)
-    public ResponseEntity<Object> handleIllegalException(IllegalArgumentException ex, WebRequest request) {
-        ErrorDetails errorDetails = getErrorDetails(ex, HttpStatus.BAD_REQUEST);
-        return new ResponseEntity<>(errorDetails, HttpStatus.BAD_REQUEST);
-    }
-
     @ExceptionHandler(ValidationException.class)
     public ResponseEntity<Object> handleValidationException(ValidationException ex, WebRequest request) {
         ErrorDetails errorDetails = getErrorDetails(ex, HttpStatus.BAD_REQUEST);

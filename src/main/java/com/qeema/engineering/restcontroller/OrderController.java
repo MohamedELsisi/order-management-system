@@ -19,7 +19,7 @@ public class OrderController {
     OrderControllerHandler orderControllerHandler;
 
     @PostMapping
-    public ResponseEntity<Void> createOrder (@Validated @RequestBody OrderDTO orderDTO) throws BadRequestException {
+    public ResponseEntity<Void> createOrder (@Validated @RequestBody OrderDTO orderDTO){
         System.out.println(orderDTO.getProductList().size());
         orderControllerHandler.handleCreateOrder(orderDTO);
         return ResponseEntity.status(HttpStatus.CREATED).build();
