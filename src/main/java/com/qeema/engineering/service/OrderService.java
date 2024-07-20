@@ -7,5 +7,5 @@ import java.util.concurrent.CompletableFuture;
 
 public interface OrderService {
     CompletableFuture<Void> addOrder(OrderDTO orderDTO);
-    List<OrderDTO> getOrders();
+    List<OrderDTO> getAllOrders();
 }

@@ -3,6 +3,7 @@ package com.qeema.engineering.service.impl;
 import com.qeema.engineering.dto.OrderDTO;
 import com.qeema.engineering.dto.ProductDTO;
 import com.qeema.engineering.exception.ResourceException;
+import com.qeema.engineering.exception.ValidationException;
 import com.qeema.engineering.mapper.OrderMapper;
 import com.qeema.engineering.model.Order;
 import com.qeema.engineering.model.OrderProduct;
@@ -17,7 +18,9 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
@@ -44,6 +47,7 @@ public class OrderServiceImpl implements OrderService {
         List<Product> productsToUpdate = new ArrayList<>();
         Order order = new Order();
 
+        validateProducts(orderDTO);
 
         logger.info("creating new order");
         return CompletableFuture.runAsync(() -> {
@@ -78,7 +82,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public List<OrderDTO> getOrders() {
+    public List<OrderDTO> getAllOrders() {
         logger.info("get all orders");
         List<Order> orders = orderRepository.findAll();
         return orders.stream()
@@ -96,7 +100,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
 
-    protected void handelCreatTheOrder(Order order,List<Product> products) {
+    protected void handelCreatTheOrder(Order order, List<Product> products) {
         try {
             logger.info("save the new order");
             orderRepository.save(order);
@@ -107,6 +111,35 @@ public class OrderServiceImpl implements OrderService {
             logger.error(ex.getMessage());
         }
 
+    }
+
+    private void validateProducts(OrderDTO order) {
+        logger.info("Validating product list");
+        Set<Long> productIds = new HashSet<>();
+
+        if (order.getProductList() == null || order.getProductList().isEmpty()) {
+            logger.error("Product list is empty");
+            throw new ValidationException("The order must contain at least one product.");
+        }
+
+        for (ProductDTO product : order.getProductList()) {
+            if (product.getId() == null) {
+                logger.error("Product id is empty");
+                throw new ValidationException("missing product ID");
+            }
+            if (product.getPrice() <= 0) {
+                logger.error("Product price less than or equal 0");
+                throw new ValidationException("Product price must be greater than 0.");
+            }
+            if (product.getQuantity() <= 0) {
+                logger.error("Product quantity less than or equal 0");
+                throw new ValidationException("Product quantity must be greater than 0");
+            }
+            if (!productIds.add(product.getId())) {
+                logger.error("Duplicate product id " + product.getId());
+                throw new ValidationException("Each product must exist only one time in the order.");
+            }
+        }
     }
 
 }
