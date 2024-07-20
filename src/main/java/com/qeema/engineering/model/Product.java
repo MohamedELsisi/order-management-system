@@ -2,8 +2,8 @@ package com.qeema.engineering.model;
 
 import jakarta.persistence.*;
 
-@Entity(name = "product")
-public class Product extends BaseEntity {
+@Entity(name = "product_table")
+public class Product extends BaseEntity  {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
