@@ -19,6 +19,17 @@ public class GeneralExceptionHandler extends ResponseEntityExceptionHandler {
         return new ResponseEntity<>(errorDetails, HttpStatus.BAD_REQUEST);
     }
 
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<Object> handleIllegalException(IllegalArgumentException ex, WebRequest request) {
+        ErrorDetails errorDetails = getErrorDetails(ex, HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(errorDetails, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(ValidationException.class)
+    public ResponseEntity<Object> handleValidationException(ValidationException ex, WebRequest request) {
+        ErrorDetails errorDetails = getErrorDetails(ex, HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(errorDetails, HttpStatus.BAD_REQUEST);
+    }
 
     private ErrorDetails getErrorDetails(Exception ex, HttpStatus status) {
         ErrorDetails errorDetails = new ErrorDetails();

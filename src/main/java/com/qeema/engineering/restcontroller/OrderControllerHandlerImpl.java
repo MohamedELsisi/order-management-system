@@ -2,6 +2,7 @@ package com.qeema.engineering.restcontroller;
 
 import com.qeema.engineering.dto.OrderDTO;
 import com.qeema.engineering.dto.ProductDTO;
+import com.qeema.engineering.exception.ValidationException;
 import com.qeema.engineering.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -22,7 +23,7 @@ public class OrderControllerHandlerImpl implements OrderControllerHandler {
     public ResponseEntity<Void> handleCreateOrder(OrderDTO order) {
 
         if (order.getProductList() == null || order.getProductList().isEmpty()) {
-            throw new IllegalArgumentException("The order must contain at least one product.");
+            throw new ValidationException("The order must contain at least one product.");
         }
         validateProducts(order);
         orderService.addOrder(order);

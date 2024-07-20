@@ -1,6 +1,7 @@
 package com.qeema.engineering.restcontroller;
 
 import com.qeema.engineering.dto.OrderDTO;
+import org.apache.coyote.BadRequestException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,7 +19,7 @@ public class OrderController {
     OrderControllerHandler orderControllerHandler;
 
     @PostMapping
-    public ResponseEntity<Void> createOrder(@Validated @RequestBody OrderDTO orderDTO) {
+    public ResponseEntity<Void> createOrder (@Validated @RequestBody OrderDTO orderDTO) throws BadRequestException {
         System.out.println(orderDTO.getProductList().size());
         orderControllerHandler.handleCreateOrder(orderDTO);
         return ResponseEntity.status(HttpStatus.CREATED).build();
