@@ -14,11 +14,11 @@ public interface OrderMapper {
 
 
     @BeanMapping(ignoreByDefault = true)
-    @Mapping(target = "productList", source = "products")
+    @Mapping(target = "productList", source = "orderProducts")
     OrderDTO mapFromOrderEntityToOrderDTO(Order order);
 
     @BeanMapping(ignoreByDefault = true)
-    @Mapping(target = "products", source = "productList")
+    @Mapping(target = "orderProducts", source = "productList")
    Order mapFromOrderDtoToOrderEntity(OrderDTO  orderDTO);
 }
 

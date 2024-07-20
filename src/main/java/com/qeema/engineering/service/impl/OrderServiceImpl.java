@@ -1,9 +1,11 @@
 package com.qeema.engineering.service.impl;
 
 import com.qeema.engineering.dto.OrderDTO;
+import com.qeema.engineering.dto.ProductDTO;
 import com.qeema.engineering.exception.ResourceException;
 import com.qeema.engineering.mapper.OrderMapper;
 import com.qeema.engineering.model.Order;
+import com.qeema.engineering.model.OrderProduct;
 import com.qeema.engineering.model.Product;
 import com.qeema.engineering.repository.OrderRepository;
 import com.qeema.engineering.service.OrderService;
@@ -40,6 +42,9 @@ public class OrderServiceImpl implements OrderService {
     @Transactional
     public CompletableFuture<Void> addOrder(OrderDTO orderDTO) {
         List<Product> productsToUpdate = new ArrayList<>();
+        Order order = new Order();
+
+
         logger.info("creating new order");
         return CompletableFuture.runAsync(() -> {
 
@@ -59,9 +64,17 @@ public class OrderServiceImpl implements OrderService {
                 existingProduct.setQuantity(existingProduct.getQuantity() - productDTO.getQuantity());
 
                 productsToUpdate.add(existingProduct);
+
+                OrderProduct orderProduct = new OrderProduct();
+                orderProduct.setOrder(order);
+                orderProduct.setProduct(existingProduct);
+                orderProduct.setQuantity(productDTO.getQuantity());
+                orderProduct.setPrice(productDTO.getPrice());
+
+                order.getOrderProducts().add(orderProduct);
             });
 
-            Order order = orderMapper.mapFromOrderDtoToOrderEntity(orderDTO);
+
             handelCreatTheOrder(order);
             updateTheProducts(productsToUpdate);
 
@@ -71,9 +84,19 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public List<OrderDTO> getOrders() {
         logger.info("get all orders");
-        return orderRepository.findAll()
-                .stream()
-                .map(orderMapper::mapFromOrderEntityToOrderDTO).collect(Collectors.toList());
+        List<Order> orders = orderRepository.findAll();
+        return orders.stream()
+                .map(order -> {
+                    OrderDTO dto = new OrderDTO();
+                    dto.setProductList(order.getOrderProducts().stream()
+                            .map(orderProduct -> {
+                                Product product = orderProduct.getProduct();
+                                return new ProductDTO(product.getId(), product.getName(), product.getPrice(), orderProduct.getQuantity());
+                            })
+                            .collect(Collectors.toList()));
+                    return dto;
+                })
+                .collect(Collectors.toList());
     }
 
 

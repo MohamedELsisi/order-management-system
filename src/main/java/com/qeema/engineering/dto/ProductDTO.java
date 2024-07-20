@@ -14,6 +14,17 @@ public class ProductDTO {
     @JsonProperty("quantity")
     private int quantity;
 
+    public ProductDTO(Long id, String name, long price, int quantity) {
+        this.id = id;
+        this.name = name;
+        this.price = price;
+        this.quantity = quantity;
+    }
+
+    public ProductDTO() {
+
+    }
+
     public Long getId() {
         return id;
     }
