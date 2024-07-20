@@ -2,6 +2,7 @@ package com.qeema.engineering.service.impl;
 
 import com.qeema.engineering.dto.OrderDTO;
 import com.qeema.engineering.dto.ProductDTO;
+import com.qeema.engineering.exception.ResourceException;
 import com.qeema.engineering.mapper.OrderMapper;
 import com.qeema.engineering.model.Order;
 import com.qeema.engineering.model.Product;
@@ -42,10 +43,10 @@ public class OrderServiceImpl implements OrderService {
             
             orderDTO.getProductList().forEach(productDTO -> {
                 Product existingProduct = productService.getProductByID(productDTO.getId())
-                        .orElseThrow(() -> new IllegalArgumentException("Product Not Found"));
+                        .orElseThrow(() -> new ResourceException("Product Not Found"));
 
                 if (productDTO.getQuantity() >= existingProduct.getQuantity()) {
-                    throw new IllegalArgumentException("Product quantity is less than the requested quantity.");
+                    throw new ResourceException("Product quantity is less than the requested quantity");
                 }
 
                 existingProduct.setQuantity(existingProduct.getQuantity() - productDTO.getQuantity());

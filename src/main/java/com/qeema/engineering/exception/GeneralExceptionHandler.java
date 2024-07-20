@@ -19,6 +19,12 @@ public class GeneralExceptionHandler extends ResponseEntityExceptionHandler {
         return new ResponseEntity<>(errorDetails, HttpStatus.BAD_REQUEST);
     }
 
+    @ExceptionHandler(ResourceException.class)
+    public ResponseEntity<Object> handleResourceException(ResourceException ex, WebRequest request) {
+        ErrorDetails errorDetails = getErrorDetails(ex , HttpStatus.INTERNAL_SERVER_ERROR);
+        return new ResponseEntity<>(errorDetails, HttpStatus.INSUFFICIENT_STORAGE);
+    }
+
     private ErrorDetails getErrorDetails(Exception ex, HttpStatus status) {
         ErrorDetails errorDetails = new ErrorDetails();
         errorDetails.setCode(status.toString());
