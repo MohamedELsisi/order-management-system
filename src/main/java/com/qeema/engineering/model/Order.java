@@ -9,11 +9,7 @@ import java.util.List;
 @Entity(name = "order_table")
 public class Order extends BaseEntity  {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
-
-    @OneToMany(cascade = CascadeType.PERSIST)
+    @OneToMany(cascade = CascadeType.PERSIST ,orphanRemoval = true)
     @JoinColumn(name = "order_id")
     private List<Product> products;
 

@@ -4,9 +4,7 @@ import jakarta.persistence.*;
 
 @Entity(name = "product_table")
 public class Product extends BaseEntity  {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+
     private long price;
     private int quantity;
     private String name;
