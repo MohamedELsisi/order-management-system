@@ -1,8 +1,13 @@
 package com.qeema.engineering.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.util.List;
 
+
 public class OrderDTO {
+
+    @JsonProperty("products")
     List<ProductDTO> productList;
 
     public List<ProductDTO> getProductList() {
