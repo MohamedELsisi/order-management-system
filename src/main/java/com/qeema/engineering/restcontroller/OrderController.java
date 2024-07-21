@@ -21,8 +21,11 @@ import java.util.List;
 @Tag(name = "Order Management", description = "APIs for managing orders")
 public class OrderController {
 
-    @Autowired
     OrderService orderService;
+
+    public OrderController(OrderService orderService) {
+        this.orderService = orderService;
+    }
 
     @PostMapping
     @Operation(summary = "Create a new order", description = "Create a new order with the provided details")
