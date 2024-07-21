@@ -16,7 +16,6 @@ import jakarta.transaction.Transactional;
 import org.apache.commons.collections4.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -24,7 +23,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
-import java.util.stream.Collectors;
 
 
 @Service
@@ -45,26 +43,35 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public CompletableFuture<Void> createNewOrder(OrderDTO orderDTO) {
+        logger.info("Starting to create new order");
         List<Product> productsToUpdate = new ArrayList<>();
         Order order = new Order();
         validateProducts(orderDTO);
         return CompletableFuture.runAsync(() -> {
+
             orderDTO.getProductList().forEach(productDTO -> {
+
+                logger.debug("Processing product with ID: {}", productDTO.getId());
+
                 Product existingProduct = extractAndValidateProduct(productDTO);
                 existingProduct.setQuantity(existingProduct.getQuantity() - productDTO.getQuantity());
                 productsToUpdate.add(existingProduct);
                 OrderProduct orderProduct = orderProductMapper.productDtoToOrderProduct(productDTO, order, existingProduct);
                 order.getOrderProducts().add(orderProduct);
+
+
             });
 
             handelSaveTheOrder(order, productsToUpdate);
+            logger.info("Order ID: {} created successfully", order.getId());
         });
     }
 
     @Override
     public List<OrderDTO> getAllOrders() {
-        logger.info("get all orders");
+        logger.info("Fetching all orders");
         List<Order> orders = orderRepository.findAll();
+        logger.debug("Retrieved {} orders from repository", orders.size());
         return orders.stream()
                 .map(order -> {
                     OrderDTO dto = new OrderDTO();
@@ -73,10 +80,11 @@ public class OrderServiceImpl implements OrderService {
                                 Product product = orderProduct.getProduct();
                                 return new ProductDTO(product.getId(), product.getName(), product.getPrice(), orderProduct.getQuantity());
                             })
-                            .collect(Collectors.toList()));
+                            .toList());
+                    logger.debug("Mapped order ID: {} to DTO", order.getId());
                     return dto;
                 })
-                .collect(Collectors.toList());
+                .toList();
     }
 
     private Product extractAndValidateProduct(ProductDTO productDTO) {
@@ -86,17 +94,17 @@ public class OrderServiceImpl implements OrderService {
     }
 
     private Product getProductFromDB(ProductDTO product) {
-        logger.info("get product {} from database", product.getId());
+        logger.debug("Fetching product with ID: {} from database", product.getId());
         return productService.getProductByID(product.getId()).orElseThrow(() -> {
-            logger.info("Product {} not found", product.getId());
+            logger.error("Product Not Found with ID: {}", product.getId());
             return new ResourceException("Product Not Found with ID: " + product.getId());
         });
     }
 
     private void checkQuantityOFProduct(ProductDTO productDTO, Product existingProduct) {
         if (productDTO.getQuantity() > existingProduct.getQuantity()) {
-            logger.error("product {} is over quantity", productDTO.getId());
-            throw new ResourceException("Product quantity is less than the requested quantity");
+            logger.error("Product quantity is less than the requested quantity for product ID: {} ", productDTO.getId());
+            throw new ResourceException("Product quantity is less than the requested quantity for product ID: " + productDTO.getId());
         }
     }
 
@@ -104,13 +112,15 @@ public class OrderServiceImpl implements OrderService {
     protected void handelSaveTheOrder(Order order, List<Product> products) {
 
         try {
-            logger.info("save the new order");
             orderRepository.save(order);
+            logger.info("Saving new order with ID: {}", order.getId());
 
-            logger.info("update the products");
+            logger.info("Updating products for order ID: {}", order.getId());
             productService.updateProducts(products);
+
+            logger.info("Order ID: {} and associated products updated successfully", order.getId());
         } catch (Exception ex) {
-            logger.error(ex.getMessage());
+            logger.error("Failed to save order ID: {}. Error: {}", order.getId(), ex.getMessage(), ex);
             //here we can send an event
         }
 
