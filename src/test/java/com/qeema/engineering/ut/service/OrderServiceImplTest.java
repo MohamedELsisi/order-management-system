@@ -9,6 +9,7 @@ import com.qeema.engineering.dto.ProductDTO;
 import com.qeema.engineering.exception.ResourceException;
 import com.qeema.engineering.exception.ValidationException;
 import com.qeema.engineering.mapper.OrderMapper;
+import com.qeema.engineering.mapper.OrderProductMapper;
 import com.qeema.engineering.model.Order;
 import com.qeema.engineering.model.Product;
 import com.qeema.engineering.repository.OrderRepository;
@@ -42,6 +43,8 @@ class OrderServiceImplTest {
     ProductService productService;
     @Mock
     OrderMapper orderMapper;
+    @Mock
+    OrderProductMapper orderProductMapper;
     @InjectMocks
     private OrderServiceImpl orderService;
 
@@ -67,7 +70,7 @@ class OrderServiceImplTest {
                 });
 
         requestProducts = requestOrder.getProductList();
-        product=new Product();
+        product = new Product();
         product.setId(1L);
         product.setName("test");
         product.setPrice(1L);

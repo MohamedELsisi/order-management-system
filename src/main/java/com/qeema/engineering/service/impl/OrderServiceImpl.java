@@ -5,6 +5,7 @@ import com.qeema.engineering.dto.ProductDTO;
 import com.qeema.engineering.exception.ResourceException;
 import com.qeema.engineering.exception.ValidationException;
 import com.qeema.engineering.mapper.OrderMapper;
+import com.qeema.engineering.mapper.OrderProductMapper;
 import com.qeema.engineering.model.Order;
 import com.qeema.engineering.model.OrderProduct;
 import com.qeema.engineering.model.Product;
@@ -32,12 +33,13 @@ public class OrderServiceImpl implements OrderService {
     OrderRepository orderRepository;
     ProductService productService;
     OrderMapper orderMapper;
+    OrderProductMapper orderProductMapper;
 
-
-    public OrderServiceImpl(OrderRepository orderRepository, ProductService productService, OrderMapper orderMapper) {
+    public OrderServiceImpl(OrderRepository orderRepository, ProductService productService, OrderMapper orderMapper, OrderProductMapper orderProductMapper) {
         this.orderRepository = orderRepository;
         this.productService = productService;
         this.orderMapper = orderMapper;
+        this.orderProductMapper = orderProductMapper;
     }
 
     @Async
@@ -57,12 +59,7 @@ public class OrderServiceImpl implements OrderService {
                 existingProduct.setQuantity(existingProduct.getQuantity() - productDTO.getQuantity());
                 productsToUpdate.add(existingProduct);
 
-                OrderProduct orderProduct = new OrderProduct();
-                orderProduct.setOrder(order);
-                orderProduct.setProduct(existingProduct);
-                orderProduct.setQuantity(productDTO.getQuantity());
-                orderProduct.setPrice(productDTO.getPrice());
-
+                OrderProduct orderProduct = orderProductMapper.productDtoToOrderProduct(productDTO, order, existingProduct);
                 order.getOrderProducts().add(orderProduct);
             });
             handelCreatTheOrder(order, productsToUpdate);
