@@ -43,30 +43,18 @@ public class OrderServiceImpl implements OrderService {
     @Async
     @Override
     @Transactional
-    public CompletableFuture<Void> addOrder(OrderDTO orderDTO) {
+    public CompletableFuture<Void> createNewOrder(OrderDTO orderDTO) {
+        logger.info("creating new order");
         List<Product> productsToUpdate = new ArrayList<>();
         Order order = new Order();
 
         validateProducts(orderDTO);
-
-        logger.info("creating new order");
         return CompletableFuture.runAsync(() -> {
 
             orderDTO.getProductList().forEach(productDTO -> {
-                logger.info("get product {} from database", productDTO.getId());
-
-                Product existingProduct = productService.getProductByID(productDTO.getId()).orElseThrow(() -> {
-                    logger.info("Product {} not found", productDTO.getId());
-                    return new ResourceException("Product Not Found with ID: " + productDTO.getId());
-                });
-
-                if (productDTO.getQuantity() >= existingProduct.getQuantity()) {
-                    logger.error("product {} is over quantity", productDTO.getId());
-                    throw new ResourceException("Product quantity is less than the requested quantity");
-                }
-
+                Product existingProduct = grtProductFromDB(productDTO);
+                checkQuantityOFProduct(productDTO, existingProduct);
                 existingProduct.setQuantity(existingProduct.getQuantity() - productDTO.getQuantity());
-
                 productsToUpdate.add(existingProduct);
 
                 OrderProduct orderProduct = new OrderProduct();
@@ -99,8 +87,23 @@ public class OrderServiceImpl implements OrderService {
                 .collect(Collectors.toList());
     }
 
+    private Product grtProductFromDB(ProductDTO product) {
+        logger.info("get product {} from database", product.getId());
+        return productService.getProductByID(product.getId()).orElseThrow(() -> {
+            logger.info("Product {} not found", product.getId());
+            return new ResourceException("Product Not Found with ID: " + product.getId());
+        });
+    }
 
-    protected void handelCreatTheOrder(Order order, List<Product> products) {
+    private void checkQuantityOFProduct(ProductDTO productDTO, Product existingProduct) {
+        if (productDTO.getQuantity() > existingProduct.getQuantity()) {
+            logger.error("product {} is over quantity", productDTO.getId());
+            throw new ResourceException("Product quantity is less than the requested quantity");
+        }
+    }
+
+
+    private void handelCreatTheOrder(Order order, List<Product> products) {
         try {
             logger.info("save the new order");
             orderRepository.save(order);

@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
 public interface OrderService {
-    CompletableFuture<Void> addOrder(OrderDTO orderDTO);
+    CompletableFuture<Void> createNewOrder(OrderDTO orderDTO);
+
     List<OrderDTO> getAllOrders();
 }

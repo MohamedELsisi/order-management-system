@@ -21,13 +21,13 @@ public class OrderController {
 
     @PostMapping
     public ResponseEntity<Void> createOrder (@Validated @RequestBody OrderDTO orderDTO){
-        orderService.addOrder(orderDTO);
+        orderService.createNewOrder(orderDTO);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
 
     @GetMapping
     public ResponseEntity<List<OrderDTO>> getAllOrders() {
-       return ResponseEntity.ok().body( orderService.getAllOrders());
+       return ResponseEntity.ok().body(orderService.getAllOrders());
     }
 }
