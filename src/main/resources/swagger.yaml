@@ -1,0 +1,65 @@
+openapi: 3.0.1
+info:
+  title: OpenAPI definition
+  version: v0
+servers:
+  - url: http://localhost:8080/orderManagement
+    description: Generated server url
+tags:
+  - name: Order Management
+    description: APIs for managing orders
+paths:
+  /v1/orders:
+    get:
+      tags:
+        - Order Management
+      summary: Get all orders
+      description: Retrieve a list of all orders
+      operationId: getAllOrders
+      responses:
+        '200':
+          description: successful Retrieve
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/OrderDTO'
+    post:
+      tags:
+        - Order Management
+      summary: Create a new order
+      description: Create a new order with the provided details
+      operationId: createOrder
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OrderDTO'
+        required: true
+      responses:
+        '201':
+          description: successful created
+components:
+  schemas:
+    OrderDTO:
+      type: object
+      properties:
+        products:
+          type: array
+          items:
+            $ref: '#/components/schemas/ProductDTO'
+    ProductDTO:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        name:
+          type: string
+        price:
+          type: integer
+          format: int64
+        quantity:
+          type: integer
+          format: int32

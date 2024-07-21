@@ -13,6 +13,7 @@ import com.qeema.engineering.repository.OrderRepository;
 import com.qeema.engineering.service.OrderService;
 import com.qeema.engineering.service.ProductService;
 import jakarta.transaction.Transactional;
+import org.apache.commons.collections4.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.annotation.Async;
@@ -119,7 +120,7 @@ public class OrderServiceImpl implements OrderService {
         logger.info("Validating product list");
         Set<Long> productIds = new HashSet<>();
 
-        if (order.getProductList() == null || order.getProductList().isEmpty()) {
+        if (CollectionUtils.isEmpty(order.getProductList())) {
             logger.error("Product list is empty");
             throw new ValidationException("The order must contain at least one product.");
         }
