@@ -42,27 +42,21 @@ public class OrderServiceImpl implements OrderService {
         this.orderProductMapper = orderProductMapper;
     }
 
-    @Async
     @Override
-    @Transactional
     public CompletableFuture<Void> createNewOrder(OrderDTO orderDTO) {
-        logger.info("creating new order");
         List<Product> productsToUpdate = new ArrayList<>();
         Order order = new Order();
-
         validateProducts(orderDTO);
         return CompletableFuture.runAsync(() -> {
-
             orderDTO.getProductList().forEach(productDTO -> {
-                Product existingProduct = grtProductFromDB(productDTO);
-                checkQuantityOFProduct(productDTO, existingProduct);
+                Product existingProduct = extractAndValidateProduct(productDTO);
                 existingProduct.setQuantity(existingProduct.getQuantity() - productDTO.getQuantity());
                 productsToUpdate.add(existingProduct);
-
                 OrderProduct orderProduct = orderProductMapper.productDtoToOrderProduct(productDTO, order, existingProduct);
                 order.getOrderProducts().add(orderProduct);
             });
-            handelCreatTheOrder(order, productsToUpdate);
+
+            handelSaveTheOrder(order, productsToUpdate);
         });
     }
 
@@ -84,7 +78,13 @@ public class OrderServiceImpl implements OrderService {
                 .collect(Collectors.toList());
     }
 
-    private Product grtProductFromDB(ProductDTO product) {
+    private Product extractAndValidateProduct(ProductDTO productDTO) {
+        Product existingProduct = getProductFromDB(productDTO);
+        checkQuantityOFProduct(productDTO, existingProduct);
+        return existingProduct;
+    }
+
+    private Product getProductFromDB(ProductDTO product) {
         logger.info("get product {} from database", product.getId());
         return productService.getProductByID(product.getId()).orElseThrow(() -> {
             logger.info("Product {} not found", product.getId());
@@ -99,8 +99,9 @@ public class OrderServiceImpl implements OrderService {
         }
     }
 
+    @Transactional
+    protected void handelSaveTheOrder(Order order, List<Product> products) {
 
-    private void handelCreatTheOrder(Order order, List<Product> products) {
         try {
             logger.info("save the new order");
             orderRepository.save(order);
@@ -109,6 +110,7 @@ public class OrderServiceImpl implements OrderService {
             productService.updateProducts(products);
         } catch (Exception ex) {
             logger.error(ex.getMessage());
+            //here we can send an event
         }
 
     }
@@ -136,7 +138,7 @@ public class OrderServiceImpl implements OrderService {
                 throw new ValidationException("Product quantity must be greater than 0");
             }
             if (!productIds.add(product.getId())) {
-                logger.error("Duplicate product id " + product.getId());
+                logger.error("Duplicate product id {}", product.getId());
                 throw new ValidationException("Each product must exist only one time in the order.");
             }
         }
