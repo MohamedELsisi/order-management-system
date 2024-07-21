@@ -74,10 +74,5 @@ After running the application, you can access the API at `http://localhost:8080/
 - `GET /api/v1/orders` - Get all orders
 
 ## API Documentation
-Swagger UI is integrated for API documentation. After starting the application, you can access it at `http://localhost:8080/swagger-ui.html`.
+Swagger UI is integrated for API documentation. After starting the application, you can access it at `http://localhost:8080/orderManagement/swagger-ui/index.html`.
 
-## Contributing
-Contributions are welcome! Please fork the repository and create a pull request with your changes. Make sure to follow the coding standards and include appropriate tests.
-
-## License
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
