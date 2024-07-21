@@ -26,6 +26,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
@@ -52,6 +54,7 @@ class OrderServiceImplTest {
     private List<ProductDTO> requestProducts;
     private OrderDTO validOrder;
     private Product product;
+    private Order order;
 
     @BeforeEach
     public void setUp() throws IOException {
@@ -119,7 +122,7 @@ class OrderServiceImplTest {
 
         ExecutionException exception = assertThrows(ExecutionException.class, future::get);
         assertTrue(exception.getCause() instanceof ResourceException);
-        
+
         verify(productService, times(1)).getProductByID(1L);
         verify(orderRepository, never()).save(any(Order.class));
         verify(productService, never()).updateProducts(anyList());
@@ -172,4 +175,11 @@ class OrderServiceImplTest {
         verify(productService, never()).getProductByID(any());
     }
 
+    @Test
+    @DisplayName("get All Orders No Orders Returns Empty List ")
+    void getAllOrdersNoOrdersReturnsEmptyList() {
+        when(orderRepository.findAll()).thenReturn(new ArrayList<>());
+        List<OrderDTO> result = orderService.getAllOrders();
+        assertEquals(0, result.size());
+    }
 }
