@@ -63,7 +63,6 @@ public class OrderServiceImpl implements OrderService {
             });
 
             handelSaveTheOrder(order, productsToUpdate);
-            logger.info("Order ID: {} created successfully", order.getId());
         });
     }
 
