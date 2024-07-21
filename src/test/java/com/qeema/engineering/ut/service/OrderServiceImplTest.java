@@ -35,7 +35,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-public class OrderServiceImplTest {
+class OrderServiceImplTest {
     @Mock
     OrderRepository orderRepository;
     @Mock
@@ -48,6 +48,7 @@ public class OrderServiceImplTest {
     private OrderDTO requestOrder;
     private List<ProductDTO> requestProducts;
     private OrderDTO validOrder;
+    private Product product;
 
     @BeforeEach
     public void setUp() throws IOException {
@@ -66,15 +67,16 @@ public class OrderServiceImplTest {
                 });
 
         requestProducts = requestOrder.getProductList();
-    }
-
-    @Test
-    public void testCreateNewOrder() throws Exception {
-        Product product = new Product();
+        product=new Product();
         product.setId(1L);
         product.setName("test");
         product.setPrice(1L);
-        product.setQuantity(150);
+        product.setQuantity(20);
+    }
+
+    @Test
+    void testCreateNewOrder() throws Exception {
+
 
         when(productService.getProductByID(1L)).thenReturn(Optional.of(product));
         when(orderRepository.save(any(Order.class))).thenReturn(new Order());
@@ -89,7 +91,7 @@ public class OrderServiceImplTest {
 
     @Test
     @DisplayName("test create new order contain NotFOUND PRODUCT")
-    public void testCreateNewOrder_ProductNotFound() {
+    void testCreateNewOrder_ProductNotFound() {
         when(productService.getProductByID(1L)).thenReturn(Optional.empty());
 
         CompletableFuture<Void> future = orderService.createNewOrder(validOrder);
@@ -104,12 +106,10 @@ public class OrderServiceImplTest {
     }
 
     @Test
-    @DisplayName("test create new order contain NotFOUND PRODUCT")
-    public void testCreateNewOrder_InsufficientProductQuantity() {
+    @DisplayName("test create new order contain Not ENOUGH PRODUCT QUANTITY")
+    void testCreateNewOrder_NotEnoughProductQuantity() {
         validOrder.getProductList().get(0).setQuantity(30);
-        Product product = new Product();
-        product.setId(1L);
-        product.setQuantity(15);
+
 
         when(productService.getProductByID(1L)).thenReturn(Optional.of(product));
 
@@ -127,7 +127,7 @@ public class OrderServiceImplTest {
 
     @Test
     @DisplayName("try to add Duplicate product ")
-    public void testCreateNewOrder_DuplicateProductIds() {
+    void testCreateNewOrder_DuplicateProductIds() {
 
         requestProducts.get(1).setId(requestProducts.get(0).getId());
         assertThrows(ValidationException.class,
@@ -154,7 +154,7 @@ public class OrderServiceImplTest {
 
     @Test
     @DisplayName("try to add invalid product price")
-    public void testCreateNewOrderInvalidProductPrice() {
+    void testCreateNewOrderInvalidProductPrice() {
         requestProducts.get(0).setPrice(0);
 
         assertThrows(ValidationException.class,
@@ -164,7 +164,7 @@ public class OrderServiceImplTest {
 
     @Test
     @DisplayName("try to add invalid product quantity")
-    public void testCreateNewOrderInvalidProductQuantity() {
+    void testCreateNewOrderInvalidProductQuantity() {
         requestProducts.get(0).setQuantity(0);
 
         assertThrows(ValidationException.class,
