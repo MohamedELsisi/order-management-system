@@ -76,3 +76,7 @@ After running the application, you can access the API at `http://localhost:8080/
 ## API Documentation
 Swagger UI is integrated for API documentation. After starting the application, you can access it at `http://localhost:8080/orderManagement/swagger-ui/index.html`.
 
+## Postman Collection
+To help you test the API, a Postman collection is available. You can download and import it into Postman using the link below:
+
+[Download Postman Collection](https://link-to-your-postman-collection)
