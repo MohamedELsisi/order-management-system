@@ -74,3 +74,18 @@ Swagger UI is integrated for API documentation. After starting the application, 
 To help you test the API, a Postman collection is available. You can download and import it into Postman using the link below:
 
 [Download Postman Collection](https://github.com/MohamedELsisi/order-management-system/blob/master/src/main/resources/Orders-Collection.postman_collection.json)
+
+## Use The Curl post
+curl --location 'http://localhost:8080/orderManagement/v1/orders' \
+--header 'Content-Type: application/json' \
+--data '{ 
+
+      "products": [
+        {
+            "id":2,
+            "name": "Product B",
+            "price": 2999,
+            "quantity": 10000
+        }
+    ]
+}'
