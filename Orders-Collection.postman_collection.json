@@ -121,7 +121,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n   \r\n      \"products\": [\r\n        {\r\n            \"id\":2,\r\n            \"name\": \"Product B\",\r\n            \"price\": 2999,\r\n            \"quantity\": 2\r\n        },\r\n        {\r\n            \"id\":5,\r\n            \"name\": \"Product E\",\r\n            \"price\": 1549,\r\n            \"quantity\": 5\r\n        }\r\n     \r\n    ]\r\n\r\n}",
+							"raw": "{\r\n   \r\n      \"products\": [\r\n        {\r\n            \"id\":2,\r\n            \"name\": \"Product B\",\r\n            \"price\": 2999,\r\n            \"quantity\": 2\r\n        }\r\n    ]\r\n\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
