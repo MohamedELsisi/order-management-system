@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+
+    <changeSet id="1" author="mohamed-elsisi1">
+        <createTable tableName="products">
+            <column name="id" type="bigint">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="name" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="price" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="quantity" type="int">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+
+    <changeSet id="2" author="mohamed-elsisi1">
+        <insert tableName="products">
+            <column name="id" value="1"/>
+            <column name="name" value="Product A"/>
+            <column name="price" value="1999"/>
+            <column name="quantity" value="100"/>
+        </insert>
+        <insert tableName="products">
+            <column name="id" value="2"/>
+            <column name="name" value="Product B"/>
+            <column name="price" value="2999"/>
+            <column name="quantity" value="50"/>
+        </insert>
+        <insert tableName="products">
+            <column name="id" value="3"/>
+            <column name="name" value="Product C"/>
+            <column name="price" value="999"/>
+            <column name="quantity" value="200"/>
+        </insert>
+        <insert tableName="products">
+            <column name="id" value="4"/>
+            <column name="name" value="Product D"/>
+            <column name="price" value="4999"/>
+            <column name="quantity" value="30"/>
+        </insert>
+        <insert tableName="products">
+            <column name="id" value="5"/>
+            <column name="name" value="Product E"/>
+            <column name="price" value="1549"/>
+            <column name="quantity" value="80"/>
+        </insert>
+        <insert tableName="products">
+            <column name="id" value="6"/>
+            <column name="name" value="Product F"/>
+            <column name="price" value="5999"/>
+            <column name="quantity" value="20"/>
+        </insert>
+        <insert tableName="products">
+            <column name="id" value="7"/>
+            <column name="name" value="Product G"/>
+            <column name="price" value="599"/>
+            <column name="quantity" value="500"/>
+        </insert>
+        <insert tableName="products">
+            <column name="id" value="8"/>
+            <column name="name" value="Product H"/>
+            <column name="price" value="1299"/>
+            <column name="quantity" value="150"/>
+        </insert>
+        <insert tableName="products">
+            <column name="id" value="9"/>
+            <column name="name" value="Product I"/>
+            <column name="price" value="2299"/>
+            <column name="quantity" value="60"/>
+        </insert>
+        <insert tableName="products">
+            <column name="id" value="10"/>
+            <column name="name" value="Product J"/>
+            <column name="price" value="9999"/>
+            <column name="quantity" value="10"/>
+        </insert>
+    </changeSet>
+
+</databaseChangeLog>
