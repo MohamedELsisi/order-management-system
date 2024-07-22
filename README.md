@@ -45,7 +45,7 @@ The Order Management System is a Spring Boot application designed to manage orde
 ### Installation
 1. Clone the repository:
     ```sh
-    git clone https://github.com/your-repository/order-management-system.git
+    git clone https://github.com/MohamedELsisi/order-management-system.git
     cd order-management-system
     ```
 
