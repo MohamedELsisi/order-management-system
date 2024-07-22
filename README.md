@@ -85,7 +85,7 @@ curl --location 'http://localhost:8080/orderManagement/v1/orders' \
             "id":2,
             "name": "Product B",
             "price": 2999,
-            "quantity": 10000
+            "quantity": 2
         }
     ]
 }'
