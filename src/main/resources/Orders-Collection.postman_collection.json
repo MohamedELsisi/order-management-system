@@ -1,0 +1,343 @@
+{
+	"info": {
+		"_postman_id": "ffb1e9e9-eff9-4d95-8e2b-45b2c77f44c0",
+		"name": "Orders-Collection",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "25399084"
+	},
+	"item": [
+		{
+			"name": "get-all-orders",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/orderManagement/v1/orders",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"orderManagement",
+						"v1",
+						"orders"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "all-orders",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/orderManagement/v1/orders",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"orderManagement",
+								"v1",
+								"orders"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Transfer-Encoding",
+							"value": "chunked"
+						},
+						{
+							"key": "Date",
+							"value": "Mon, 22 Jul 2024 02:02:44 GMT"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=60"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						}
+					],
+					"cookie": [],
+					"body": "[\n    {\n        \"products\": [\n            {\n                \"id\": 2,\n                \"name\": \"Product B\",\n                \"price\": 2999,\n                \"quantity\": 2\n            },\n            {\n                \"id\": 5,\n                \"name\": \"Product E\",\n                \"price\": 1549,\n                \"quantity\": 5\n            }\n        ]\n    }\n]"
+				}
+			]
+		},
+		{
+			"name": "Create-new-order",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n   \r\n      \"products\": [\r\n        {\r\n            \"id\":2,\r\n            \"name\": \"Product B\",\r\n            \"price\": 2999,\r\n            \"quantity\": 2\r\n        },\r\n        {\r\n            \"id\":5,\r\n            \"name\": \"Product E\",\r\n            \"price\": 1549,\r\n            \"quantity\": 5\r\n        }\r\n     \r\n    ]\r\n\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/orderManagement/v1/orders",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"orderManagement",
+						"v1",
+						"orders"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "Valid-order",
+					"originalRequest": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n   \r\n      \"products\": [\r\n        {\r\n            \"id\":2,\r\n            \"name\": \"Product B\",\r\n            \"price\": 2999,\r\n            \"quantity\": 2\r\n        },\r\n        {\r\n            \"id\":5,\r\n            \"name\": \"Product E\",\r\n            \"price\": 1549,\r\n            \"quantity\": 5\r\n        }\r\n     \r\n    ]\r\n\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/orderManagement/v1/orders",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"orderManagement",
+								"v1",
+								"orders"
+							]
+						}
+					},
+					"status": "Created",
+					"code": 201,
+					"_postman_previewlanguage": "plain",
+					"header": [
+						{
+							"key": "Content-Length",
+							"value": "0"
+						},
+						{
+							"key": "Date",
+							"value": "Mon, 22 Jul 2024 01:54:04 GMT"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=60"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						}
+					],
+					"cookie": [],
+					"body": null
+				},
+				{
+					"name": "bad-price-requested",
+					"originalRequest": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n   \r\n      \"products\": [\r\n        {\r\n            \"id\":2,\r\n            \"name\": \"Product B\",\r\n            \"price\": 0,\r\n            \"quantity\": 2\r\n        }\r\n    ]\r\n\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/orderManagement/v1/orders",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"orderManagement",
+								"v1",
+								"orders"
+							]
+						}
+					},
+					"status": "Bad Request",
+					"code": 400,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Transfer-Encoding",
+							"value": "chunked"
+						},
+						{
+							"key": "Date",
+							"value": "Mon, 22 Jul 2024 01:58:52 GMT"
+						},
+						{
+							"key": "Connection",
+							"value": "close"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"code\": \"400 BAD_REQUEST\",\n    \"reason\": \"Product price must be greater than 0.\",\n    \"status\": \"400\"\n}"
+				},
+				{
+					"name": "no -id-supported",
+					"originalRequest": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n   \r\n      \"products\": [\r\n        {\r\n            \"id\":null,\r\n            \"name\": \"Product B\",\r\n            \"price\": 2999,\r\n            \"quantity\": 20000\r\n        }\r\n    ]\r\n\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/orderManagement/v1/orders",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"orderManagement",
+								"v1",
+								"orders"
+							]
+						}
+					},
+					"status": "Bad Request",
+					"code": 400,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Transfer-Encoding",
+							"value": "chunked"
+						},
+						{
+							"key": "Date",
+							"value": "Mon, 22 Jul 2024 02:01:48 GMT"
+						},
+						{
+							"key": "Connection",
+							"value": "close"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"code\": \"400 BAD_REQUEST\",\n    \"reason\": \"missing product ID\",\n    \"status\": \"400\"\n}"
+				},
+				{
+					"name": "bad-quantity-requested",
+					"originalRequest": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n   \r\n      \"products\": [\r\n        {\r\n            \"id\":2,\r\n            \"name\": \"Product B\",\r\n            \"price\": 2999,\r\n            \"quantity\": 0\r\n        }\r\n     \r\n    ]\r\n\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/orderManagement/v1/orders",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"orderManagement",
+								"v1",
+								"orders"
+							]
+						}
+					},
+					"status": "Bad Request",
+					"code": 400,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Transfer-Encoding",
+							"value": "chunked"
+						},
+						{
+							"key": "Date",
+							"value": "Mon, 22 Jul 2024 02:06:13 GMT"
+						},
+						{
+							"key": "Connection",
+							"value": "close"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"code\": \"400 BAD_REQUEST\",\n    \"reason\": \"Product quantity must be greater than 0\",\n    \"status\": \"400\"\n}"
+				}
+			]
+		}
+	]
+}
