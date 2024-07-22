@@ -11,6 +11,7 @@ import com.qeema.engineering.exception.ValidationException;
 import com.qeema.engineering.mapper.OrderMapper;
 import com.qeema.engineering.mapper.OrderProductMapper;
 import com.qeema.engineering.model.Order;
+import com.qeema.engineering.model.OrderProduct;
 import com.qeema.engineering.model.Product;
 import com.qeema.engineering.repository.OrderRepository;
 import com.qeema.engineering.service.ProductService;
@@ -55,6 +56,7 @@ class OrderServiceImplTest {
     private OrderDTO validOrder;
     private Product product;
     private Order order;
+    OrderProduct orderProduct;
 
     @BeforeEach
     public void setUp() throws IOException {
@@ -73,11 +75,20 @@ class OrderServiceImplTest {
                 });
 
         requestProducts = requestOrder.getProductList();
+
         product = new Product();
         product.setId(1L);
         product.setName("test");
         product.setPrice(1L);
         product.setQuantity(20);
+
+        order = new Order();
+
+        orderProduct = new OrderProduct();
+        orderProduct.setOrder(order);
+        orderProduct.setProduct(product);
+
+
     }
 
     @Test
@@ -177,9 +188,17 @@ class OrderServiceImplTest {
 
     @Test
     @DisplayName("get All Orders No Orders Returns Empty List ")
-    void getAllOrdersNoOrdersReturnsEmptyList() {
+    void testGetAllOrdersNoOrdersReturnsEmptyList() {
         when(orderRepository.findAll()).thenReturn(new ArrayList<>());
         List<OrderDTO> result = orderService.getAllOrders();
         assertEquals(0, result.size());
+    }
+
+    @Test
+    @DisplayName("try to add Duplicated order")
+    void testRequestDuplicatedOrder() {
+        when(orderRepository.findByProductIds(List.of(product.getId()))).thenReturn(List.of(order));
+        assertThrows(ValidationException.class,
+                () -> orderService.createNewOrder(validOrder));
     }
 }
