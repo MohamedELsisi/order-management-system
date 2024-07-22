@@ -47,10 +47,7 @@ public class OrderServiceImpl implements OrderService {
         logger.info("Starting to create new order");
         List<Product> productsToUpdate = new ArrayList<>();
         Order order = new Order();
-
         validateProducts(orderDTO);
-        checkDuplicatedOrders(orderDTO);
-
         return CompletableFuture.runAsync(() -> {
 
             orderDTO.getProductList().forEach(productDTO -> {
@@ -128,20 +125,6 @@ public class OrderServiceImpl implements OrderService {
         }
 
     }
-
-    private void checkDuplicatedOrders(OrderDTO orderDTO) {
-
-        List<Long> productIds = orderDTO.getProductList().stream()
-                .map(ProductDTO::getId)
-                .collect(Collectors.toList());
-
-        List<Order> existingOrders = orderRepository.findByProductIds(productIds);
-        if (!existingOrders.isEmpty()) {
-            logger.error("Order already exists with the same products {}", productIds);
-            throw new ValidationException("Order already exists with the given products.");
-        }
-    }
-
 
     private void validateProducts(OrderDTO order) {
         logger.info("Validating product list");

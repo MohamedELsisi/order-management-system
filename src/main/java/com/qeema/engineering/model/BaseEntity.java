@@ -20,4 +20,6 @@ public class BaseEntity {
     @UpdateTimestamp
     @Column(name = "updated_at")
     protected LocalDateTime updatedAt;
+
+
 }

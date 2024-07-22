@@ -31,7 +31,7 @@ public class OrderController {
     @Operation(summary = "Create a new order", description = "Create a new order with the provided details")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "successful created")})
-    public ResponseEntity<Void> createOrder(@Validated @RequestBody OrderDTO orderDTO) {
+    public ResponseEntity<Void> createOrder(@RequestBody OrderDTO orderDTO) {
         orderService.createNewOrder(orderDTO);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
