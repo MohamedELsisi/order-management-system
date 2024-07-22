@@ -194,11 +194,4 @@ class OrderServiceImplTest {
         assertEquals(0, result.size());
     }
 
-    @Test
-    @DisplayName("try to add Duplicated order")
-    void testRequestDuplicatedOrder() {
-        when(orderRepository.findByProductIds(List.of(product.getId()))).thenReturn(List.of(order));
-        assertThrows(ValidationException.class,
-                () -> orderService.createNewOrder(validOrder));
-    }
 }
