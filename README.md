@@ -60,12 +60,6 @@ The Order Management System is a Spring Boot application designed to manage orde
     mvn spring-boot:run
     ```
 
-2. Alternatively, you can build the Docker image and run it:
-    ```sh
-    docker build -t order-management-system .
-    docker run -p 8080:8080 order-management-system
-    ```
-
 ## Usage
 After running the application, you can access the API at `http://localhost:8080/api/v1/orders`.
 
