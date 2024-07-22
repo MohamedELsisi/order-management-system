@@ -69,11 +69,11 @@ After running the application, you can access the API at `http://localhost:8080/
 
 ## API Documentation
 Swagger UI is integrated for API documentation. After starting the application, you can access it at `http://localhost:8080/orderManagement/swagger-ui/index.html`.
-[Download Swagger File](https://github.com/MohamedELsisi/order-management-system/blob/master/src/main/resources/swagger.yaml)
+[Download Swagger File](https://github.com/MohamedELsisi/order-management-system/blob/master/swagger.yaml)
 ## Postman Collection
 To help you test the API, a Postman collection is available. You can download and import it into Postman using the link below:
 
-[Download Postman Collection](https://github.com/MohamedELsisi/order-management-system/blob/master/src/main/resources/Orders-Collection.postman_collection.json)
+[Download Postman Collection](https://github.com/MohamedELsisi/order-management-system/blob/master/Orders-Collection.postman_collection.json)
 
 ## Use The Curl post
 curl --location 'http://localhost:8080/orderManagement/v1/orders' \
